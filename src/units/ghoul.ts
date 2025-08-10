@@ -36,20 +36,20 @@ export class GhoulUnit implements Unit {
 
         setTimeout(() => {
             this.move();
-        }, 250);
+        }, 50);
     }
 
     public draw() {
         const context = this.canvasHandler.getCanvasContext();
         const canvasPosition = this.gameGrid.getCanvasDrawPosition(this.position);
         const cellSize = this.gameGrid.cellSize;
+        const centerOfCellX = canvasPosition.x + (cellSize * 0.5);
+        const centerOfCellY = canvasPosition.y + (cellSize * 0.5);
+
         context.beginPath();
-        context.moveTo(canvasPosition.x, canvasPosition.y);
-        context.lineTo(canvasPosition.x + cellSize, canvasPosition.y);
-        context.lineTo(canvasPosition.x + cellSize, canvasPosition.y + cellSize);
-        context.lineTo(canvasPosition.x, canvasPosition.y + cellSize);
-        context.lineTo(canvasPosition.x, canvasPosition.y);
-        context.stroke();
+        const radius = cellSize * 0.4;
+        context.ellipse(centerOfCellX, centerOfCellY, radius, radius, 0, 0, 360);
+        context.fill();
         context.closePath();
     }
 

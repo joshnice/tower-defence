@@ -1,18 +1,15 @@
-import { getCanvasContext } from "./canvas/canvas-helpers";
-import { setupCanvas } from "./canvas/setup";
+import { CanvasHandler } from "./canvas/canvas";
+import { GameGrid } from "./game-world/game-grid";
+import { RequestAnimationFrameHandler } from "./request-animation-frame/request-animation-frame";
 import "./style.css";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <canvas id="game-canvas"></canvas>
+  <canvas id="game-canvas" width="500" height="500"></canvas>
 `;
 
-main();
 
-function main() {
-  const canvas = setupCanvas();
-  const ctx = getCanvasContext(canvas);
+const canvas = new CanvasHandler();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "lime";
-  ctx.fillRect(100, 100, 50, 50);
-}
+new RequestAnimationFrameHandler();
+
+const gameGrid = new GameGrid(canvas, { rows: 10, columns: 10, size: 50 });

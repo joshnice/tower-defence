@@ -23,4 +23,10 @@ export class CanvasHandler {
         return canvasContext;
     }
 
+    public clearCanvas() {
+        const canvasContext = this.getCanvasContext();
+        // canvasContext.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+        canvasContext.clearRect(0, 0, 500, 500);
+    }
+
 }

@@ -1,24 +1,20 @@
-import type { CanvasHandler } from "../canvas/canvas";
-import type { GameGrid } from "../game-world/game-grid";
+import type { Unit } from "../units/unit";
 
 export class RequestAnimationFrameHandler {
 
-    private previousRequestAnimationFrameTime: number | null = null;
 
-    private readonly canvasHandler: CanvasHandler;
+    private readonly getUnits: () => Unit[];
 
-    private readonly gameGrid: GameGrid;
-
-    constructor(gameGrid: GameGrid, canvasHandler: CanvasHandler) {
+    constructor(getUnits: () => Unit[]) {
         requestAnimationFrame(this.callback.bind(this));
-        this.gameGrid = gameGrid;
-        this.canvasHandler = canvasHandler;
+        this.getUnits = getUnits;
     }
 
-    private callback() {
-        this.previousRequestAnimationFrameTime = performance.now();
-        this.canvasHandler.clearCanvas();
-        this.gameGrid.redrawGameGrid();
+    private callback(time: number) {
+        this.getUnits().forEach((unit) => {
+            unit.update(time);
+        })
+
         requestAnimationFrame(this.callback.bind(this));
     }
 }

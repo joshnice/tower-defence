@@ -97,10 +97,8 @@ export class GhoulUnit implements Unit {
         const sizeX = this.unitConfig.size.x * this.gameGrid.cellSize;
         const sizeY = this.unitConfig.size.y * this.gameGrid.cellSize;
         const previousCanvasPosition = this.gameGrid.getCanvasPosition(this.previousPosition);
-        console.log("erase", previousCanvasPosition, sizeX, sizeY);
         this.canvasHandler.clearCanvas(previousCanvasPosition, { x: sizeX, y: sizeY });
-        // TODO: Readd this in and stop it calling redraw so much
-        // this.gameGrid.redrawCoordinates(this.getCurrentGameGridCoordiantes());
+        this.gameGrid.redrawCoordinates(this.getCurrentGameGridCoordiantes(), [this.id]);
     }
 
     public redraw() {

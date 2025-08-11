@@ -65,12 +65,16 @@ export class GameGrid {
         })
     }
 
-    public redrawCoordinates(positions: { x: number, y: number }[]) {
+    public redrawCoordinates(positions: { x: number, y: number }[], _skipUnitsRedrawing: string[] = []) {
+        const skipUnitsRedrawing: string[] = _skipUnitsRedrawing;
         positions.forEach(({ x, y }) => {
             const units = this.cells[x][y];
             units?.forEach((unitId) => {
-                const unit = this.unitIdToUnit[unitId];
-                unit.redraw();
+                if (!skipUnitsRedrawing.includes(unitId)) {
+                    const unit = this.unitIdToUnit[unitId];
+                    unit.redraw();
+                    skipUnitsRedrawing.push(unit.id);
+                }
             })
         })
     }

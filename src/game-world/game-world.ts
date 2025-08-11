@@ -2,8 +2,8 @@ import type { Unit } from "../units/unit";
 
 type Cell = string[] | null;
 
-/** Handles the location of units within the game grid, should not communicate with the canvas */
-export class GameGrid {
+/** Handles the location of units within the game world, should not communicate with the canvas */
+export class GameWorld {
 
     private cells: Cell[][] = [];
 
@@ -28,12 +28,12 @@ export class GameGrid {
         }
     }
 
-    public addUnit(unit: Unit) {
+    public addUnitToGameWorld(unit: Unit) {
         this.unitIdToUnit[unit.id] = unit;
         this.moveUnitToUpdatedPosition(unit);
     }
 
-    public moveGridPosition(unit: Unit) {
+    public updateUnitsGameWorldPosition(unit: Unit) {
         this.removeUnitFromPosition(unit);
         this.moveUnitToUpdatedPosition(unit);
     }
@@ -54,7 +54,7 @@ export class GameGrid {
         unit.getPositionInGameWorld().forEach((position) => {
 
             if (this.cells[position.x][position.y] === undefined) {
-                throw new Error("Chosen cell has not been given a value, outside of GameGrid");
+                throw new Error("Chosen cell has not been given a value, outside of Game World");
             }
 
             if (this.cells[position.x][position.y] === null) {

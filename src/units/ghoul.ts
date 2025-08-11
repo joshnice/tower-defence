@@ -1,14 +1,14 @@
 import type { CanvasHandler } from "../canvas/canvas";
-import type { GameGrid } from "../game-world/game-grid";
+import type { GameWorld } from "../game-world/game-world";
 import { Unit, type UnitName } from "./unit";
 
-/** Unit controls where it is on the game grid and draws/updates and removes it self from the canvas */
-export class GhoulUnit extends Unit {
+/** Unit controls where it is on the game world and draws/updates and removes it self from the canvas */
+export class Ghoul extends Unit {
 
     public name: UnitName = "ghoul";
 
-    constructor(canvasHandler: CanvasHandler, gameGrid: GameGrid) {
-        super(canvasHandler, gameGrid)
+    constructor(canvasHandler: CanvasHandler, gameWorld: GameWorld) {
+        super(canvasHandler, gameWorld)
     }
 
     protected setUnitStats(): void {
@@ -22,7 +22,7 @@ export class GhoulUnit extends Unit {
 
         let updatedPositionX = this.position.x + 1;
         let updatedPositionY = this.position.y;
-        if (updatedPositionX + this.unitStats.size.x > this.gameGrid.columns - 1) {
+        if (updatedPositionX + this.unitStats.size.x > this.gameWorld.columns - 1) {
             updatedPositionX = 0;
             updatedPositionY = updatedPositionY + this.unitStats.size.y;
         }
@@ -30,19 +30,19 @@ export class GhoulUnit extends Unit {
         this.previousPosition = { x: this.position.x, y: this.position.y };
         this.position = { x: updatedPositionX, y: updatedPositionY };
 
-        this.gameGrid.moveGridPosition(this);
+        this.gameWorld.updateUnitsGameWorldPosition(this);
     }
 
     public draw() {
         const context = this.canvasHandler.getCanvasContext();
 
-        const cellSize = this.gameGrid.cellSize;
+        const cellSize = this.gameWorld.cellSize;
 
-        const gameGridPositions = this.getPositionInGameWorld();
-        const canvasPositions = gameGridPositions.map((position) => this.gameGrid.getCanvasPosition(position));
+        const gameWorldPositions = this.getPositionInGameWorld();
+        const canvasPositions = gameWorldPositions.map((position) => this.gameWorld.getCanvasPosition(position));
 
         const sum = canvasPositions.reduce((sum, pos) => ({ x: sum.x + pos.x, y: sum.y + pos.y }), { x: 0, y: 0 })
-        const { x: centerOfCellX, y: centerOfCellY } = { x: sum.x / gameGridPositions.length, y: sum.y / gameGridPositions.length };
+        const { x: centerOfCellX, y: centerOfCellY } = { x: sum.x / gameWorldPositions.length, y: sum.y / gameWorldPositions.length };
 
         const radiusX = cellSize * this.unitStats.size.x;
         const radiusY = cellSize * this.unitStats.size.y;

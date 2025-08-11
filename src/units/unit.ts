@@ -1,5 +1,5 @@
 import type { CanvasHandler } from "../canvas/canvas";
-import type { GameGrid } from "../game-world/game-grid";
+import type { GameWorld } from "../game-world/game-world";
 import type { UnitStats } from "./unit-stats";
 
 export type UnitName = "ghoul";
@@ -15,18 +15,18 @@ export abstract class Unit {
 
     protected readonly canvasHandler: CanvasHandler;
 
-    protected readonly gameGrid: GameGrid;
+    protected readonly gameWorld: GameWorld;
 
     protected lastMoveTime: number = 0;
 
     protected unitStats: UnitStats = { moveTime: 0, size: { x: 0, y: 0 } };
 
-    constructor(canvasHandler: CanvasHandler, gameGrid: GameGrid) {
+    constructor(canvasHandler: CanvasHandler, gameWorld: GameWorld) {
         this.canvasHandler = canvasHandler;
-        this.gameGrid = gameGrid;
+        this.gameWorld = gameWorld;
         this.id = crypto.randomUUID();
         this.setUnitStats();
-        this.gameGrid.addUnit(this);
+        this.gameWorld.addUnitToGameWorld(this);
         this.redraw();
     }
 
@@ -56,12 +56,12 @@ export abstract class Unit {
     /** Erases the unit on the canvas */
     protected erase() {
         // Clear the unit from the canvas
-        const sizeX = this.unitStats.size.x * this.gameGrid.cellSize;
-        const sizeY = this.unitStats.size.y * this.gameGrid.cellSize;
-        const previousCanvasPosition = this.gameGrid.getCanvasPosition(this.previousPosition);
+        const sizeX = this.unitStats.size.x * this.gameWorld.cellSize;
+        const sizeY = this.unitStats.size.y * this.gameWorld.cellSize;
+        const previousCanvasPosition = this.gameWorld.getCanvasPosition(this.previousPosition);
         this.canvasHandler.clearCanvas(previousCanvasPosition, { x: sizeX, y: sizeY });
         // Redraw the other units where the canvas has been cleared
-        this.gameGrid.redrawCoordinates(this.getPositionInGameWorld(), [this.id]);
+        this.gameWorld.redrawCoordinates(this.getPositionInGameWorld(), [this.id]);
     };
 
     /** Moves the position of the unit in the game world */

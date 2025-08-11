@@ -1,8 +1,8 @@
 import { CanvasHandler } from "./canvas/canvas";
-import { GameGrid } from "./game-world/game-grid";
+import { GameWorld } from "./game-world/game-world";
 import { RequestAnimationFrameHandler } from "./request-animation-frame/request-animation-frame";
 import "./style.css";
-import { GhoulUnit } from "./units/ghoul";
+import { Ghoul } from "./units/ghoul";
 import type { Unit } from "./units/unit";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -11,20 +11,20 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const canvas = new CanvasHandler();
 
-const gameGrid = new GameGrid({ rows: 100, columns: 100, size: 5 });
+const gameWorld = new GameWorld({ rows: 100, columns: 100, size: 5 });
 
-const units: Unit[] = [new GhoulUnit(canvas, gameGrid)];
+const units: Unit[] = [new Ghoul(canvas, gameWorld)];
 
 setTimeout(() => {
-  units.push(new GhoulUnit(canvas, gameGrid));
+  units.push(new Ghoul(canvas, gameWorld));
 }, 300);
 
 setTimeout(() => {
-  units.push(new GhoulUnit(canvas, gameGrid));
+  units.push(new Ghoul(canvas, gameWorld));
 }, 600);
 
 setTimeout(() => {
-  units.push(new GhoulUnit(canvas, gameGrid));
+  units.push(new Ghoul(canvas, gameWorld));
 }, 900);
 
 new RequestAnimationFrameHandler(() => units);

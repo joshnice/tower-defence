@@ -1,4 +1,4 @@
-export interface UnitConfig {
+export interface UnitStats {
 
     moveTime: number;
 

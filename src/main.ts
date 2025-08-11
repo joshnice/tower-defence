@@ -17,14 +17,14 @@ const units: Unit[] = [new GhoulUnit(canvas, gameGrid)];
 
 setTimeout(() => {
   units.push(new GhoulUnit(canvas, gameGrid));
-}, 1000);
+}, 300);
 
 setTimeout(() => {
   units.push(new GhoulUnit(canvas, gameGrid));
-}, 2000);
+}, 600);
 
 setTimeout(() => {
   units.push(new GhoulUnit(canvas, gameGrid));
-}, 3000);
+}, 900);
 
 new RequestAnimationFrameHandler(() => units);

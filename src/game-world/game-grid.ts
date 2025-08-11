@@ -39,7 +39,7 @@ export class GameGrid {
     }
 
     private removeUnitFromPosition(unit: Unit) {
-        unit.getPreviousGameGridCoordiantes().forEach((position) => {
+        unit.getPrevioussPositionInGameWorld().forEach((position) => {
             let unitsInPreviousCell = this.cells[position.x][position.y];
 
             if (unitsInPreviousCell == null) {
@@ -51,7 +51,7 @@ export class GameGrid {
     }
 
     private moveUnitToUpdatedPosition(unit: Unit) {
-        unit.getCurrentGameGridCoordiantes().forEach((position) => {
+        unit.getPositionInGameWorld().forEach((position) => {
 
             if (this.cells[position.x][position.y] === undefined) {
                 throw new Error("Chosen cell has not been given a value, outside of GameGrid");
@@ -72,7 +72,7 @@ export class GameGrid {
             units?.forEach((unitId) => {
                 if (!skipUnitsRedrawing.includes(unitId)) {
                     const unit = this.unitIdToUnit[unitId];
-                    unit.redraw();
+                    unit.draw();
                     skipUnitsRedrawing.push(unit.id);
                 }
             })

@@ -10,11 +10,11 @@ export class Path {
 
     private readonly canvasHandler: CanvasHandler
 
-    private readonly pathCheckPoints: { x: number, y: number }[] = [];
+    public readonly pathCheckPoints: { x: number, y: number, movement: "hoz" | "vert" | "end" | "spawn" }[] = [];
 
     private readonly pathWidth: number = 0;
 
-    constructor(canvasHandler: CanvasHandler, cellSize: number, pathCheckPoints: { x: number, y: number }[], width: number) {
+    constructor(canvasHandler: CanvasHandler, cellSize: number, pathCheckPoints: { x: number, y: number, movement: "hoz" | "vert" | "end" | "spawn" }[], width: number) {
         this.canvasHandler = canvasHandler;
         this.cellSize = cellSize;
         this.pathCheckPoints = pathCheckPoints;

@@ -1,5 +1,6 @@
 import type { CanvasHandler } from "../canvas/canvas";
 import type { GameWorld } from "../game-world/game-world";
+import type { Path } from "../game-world/path";
 import { Unit, type UnitName } from "./unit";
 
 /** Unit controls where it is on the game world and draws/updates and removes it self from the canvas */
@@ -7,8 +8,13 @@ export class Ghoul extends Unit {
 
     public name: UnitName = "ghoul";
 
-    constructor(canvasHandler: CanvasHandler, gameWorld: GameWorld) {
-        super(canvasHandler, gameWorld)
+    private readonly path: Path;
+
+    private pathCheckPointCount = 0;
+
+    constructor(canvasHandler: CanvasHandler, gameWorld: GameWorld, path: Path) {
+        super(canvasHandler, gameWorld);
+        this.path = path;
     }
 
     protected setUnitStats(): void {
@@ -20,16 +26,48 @@ export class Ghoul extends Unit {
     protected move(time: number) {
         this.lastMoveTime = time;
 
-        let updatedPositionX = this.position.x + 1;
-        let updatedPositionY = this.position.y;
-        if (updatedPositionX + this.unitStats.size.x > this.gameWorld.columns - 1) {
-            updatedPositionX = 0;
-            updatedPositionY = updatedPositionY + this.unitStats.size.y;
+        let updatedPositionX: null | number = null;
+        let updatedPositionY: null | number = null;
+
+        const currentPathCheckPoint = this.path.pathCheckPoints[this.pathCheckPointCount];
+        const { movement } = currentPathCheckPoint;
+
+        // We are spawning the unit
+        if (movement === "spawn") {
+            updatedPositionX = this.path.pathCheckPoints[0].x;
+            updatedPositionY = this.path.pathCheckPoints[0].y;
+            this.pathCheckPointCount++;
+        }
+
+        if (movement === "hoz") {
+            updatedPositionX = this.position.x + 1;
+            updatedPositionY = this.position.y;
+
+            if (currentPathCheckPoint.x === updatedPositionX) {
+                this.pathCheckPointCount++;
+            }
+        }
+
+        if (movement === "vert") {
+            updatedPositionX = this.position.x;
+            updatedPositionY = this.position.y + 1;
+
+            if (currentPathCheckPoint.y === updatedPositionY) {
+                this.pathCheckPointCount++;
+            }
+        }
+
+
+        if (updatedPositionX == null || updatedPositionY == null) {
+            throw new Error("Position not updated correctly");
+        }
+
+        if (this.path.pathCheckPoints[this.pathCheckPointCount] == null) {
+            this.remove();
         }
 
         this.previousPosition = { x: this.position.x, y: this.position.y };
         this.position = { x: updatedPositionX, y: updatedPositionY };
-
         this.gameWorld.updateUnitsGameWorldPosition(this);
     }
 

@@ -7,8 +7,10 @@ export type UnitName = "ghoul";
 export abstract class Unit {
     public abstract name: UnitName;
 
+    /** Game world position */
     public position: { x: number, y: number } = { x: 0, y: 0 };
 
+    /** Previous game world position */
     public previousPosition: { x: number, y: number } = { x: 0, y: 0 };
 
     public readonly id: string;
@@ -20,6 +22,8 @@ export abstract class Unit {
     protected lastMoveTime: number = 0;
 
     protected unitStats: UnitStats = { moveTime: 0, size: { x: 0, y: 0 } };
+
+    private removed = false;
 
     constructor(canvasHandler: CanvasHandler, gameWorld: GameWorld) {
         this.canvasHandler = canvasHandler;
@@ -36,6 +40,11 @@ export abstract class Unit {
 
     /** Called every request animation cycle */
     public update(updateTime: number) {
+
+        if (this.removed) {
+            return;
+        }
+
         const move = updateTime - this.lastMoveTime > this.unitStats.moveTime;
         let draw = false;
 
@@ -106,5 +115,10 @@ export abstract class Unit {
 
     public getUnitSize() {
         return this.unitStats.size;
+    }
+
+    public remove() {
+        this.removed = true;
+        this.erase();
     }
 }

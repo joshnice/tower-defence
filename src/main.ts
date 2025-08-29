@@ -16,22 +16,28 @@ const CELL_SIZE = 5;
 const ROWS = 100;
 const COLUMNS = ROWS
 
-const path = new Path(canvas, CELL_SIZE, [{ x: 25, y: 0 }, { x: 25, y: 25 }, { x: 75, y: 25 }, { x: 75, y: ROWS }], 4)
-
+const path = new Path(canvas, CELL_SIZE, [
+  { x: 25, y: 0, movement: "spawn" },
+  { x: 25, y: 25, movement: "vert" },
+  { x: 75, y: 25, movement: "hoz" },
+  { x: 75, y: ROWS, movement: "vert" },
+], 4)
 const gameWorld = new GameWorld({ rows: ROWS, columns: COLUMNS, size: CELL_SIZE, }, path);
 
-const units: Unit[] = [];
 
-// setTimeout(() => {
-//   units.push(new Ghoul(canvas, gameWorld));
-// }, 500);
+const units: Unit[] = [new Ghoul(canvas, gameWorld, path)];
 
-// setTimeout(() => {
-//   units.push(new Ghoul(canvas, gameWorld));
-// }, 1000);
 
-// setTimeout(() => {
-//   units.push(new Ghoul(canvas, gameWorld));
-// }, 1500);
+setTimeout(() => {
+  units.push(new Ghoul(canvas, gameWorld, path));
+}, 500);
+
+setTimeout(() => {
+  units.push(new Ghoul(canvas, gameWorld, path));
+}, 1000);
+
+setTimeout(() => {
+  units.push(new Ghoul(canvas, gameWorld, path));
+}, 1500);
 
 new RequestAnimationFrameHandler(() => units);

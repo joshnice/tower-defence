@@ -52,7 +52,7 @@ export class GameWorld {
             let unitsInPreviousCell = this.cells[position.x][position.y];
 
             if (unitsInPreviousCell == null) {
-                throw new Error("Unit couldn't be found in previous cell");
+                return;
             }
 
             this.cells[position.x][position.y] = unitsInPreviousCell?.filter((unitId) => unit.id !== unitId);
@@ -63,7 +63,7 @@ export class GameWorld {
         unit.getPositionInGameWorld().forEach((position) => {
 
             if (this.cells[position.x][position.y] === undefined) {
-                throw new Error("Chosen cell has not been given a value, outside of Game World");
+                return;
             }
 
             if (this.cells[position.x][position.y] === null) {

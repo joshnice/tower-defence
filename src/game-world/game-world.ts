@@ -106,8 +106,8 @@ export class GameWorld {
         const size = unit.getUnitSize();
         const x = position.x * this.cellSize;
         const y = position.y * this.cellSize;
-        const endX = x + (size.x * this.cellSize) + this.cellSize
-        const endY = y + (size.y * this.cellSize) + this.cellSize
+        const endX = x + (size.x * this.cellSize);
+        const endY = y + (size.y * this.cellSize);
         return { start: { x, y }, end: { x: endX, y: endY } };
     }
 }

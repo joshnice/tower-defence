@@ -38,11 +38,10 @@ export class Ghoul extends Unit {
 
         const cellSize = this.gameWorld.cellSize;
 
-        const gameWorldPositions = this.getPositionInGameWorld();
-        const canvasPositions = gameWorldPositions.map((position) => this.gameWorld.getCanvasPosition(position));
+        const canvasPositions = this.gameWorld.getCanvasPositionForUnit(this);
 
-        const sum = canvasPositions.reduce((sum, pos) => ({ x: sum.x + pos.x, y: sum.y + pos.y }), { x: 0, y: 0 })
-        const { x: centerOfCellX, y: centerOfCellY } = { x: sum.x / gameWorldPositions.length, y: sum.y / gameWorldPositions.length };
+        const centerOfCellX = (canvasPositions.start.x + canvasPositions.end.x) / 2;
+        const centerOfCellY = (canvasPositions.start.y + canvasPositions.end.y) / 2;
 
         const radiusX = cellSize * this.unitStats.size.x;
         const radiusY = cellSize * this.unitStats.size.y;
@@ -53,5 +52,4 @@ export class Ghoul extends Unit {
         context.fillStyle = "blue";
         context.fill();
     }
-
 }

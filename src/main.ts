@@ -1,5 +1,6 @@
 import { CanvasHandler } from "./canvas/canvas";
 import { GameWorld } from "./game-world/game-world";
+import { Path } from "./game-world/path";
 import { RequestAnimationFrameHandler } from "./request-animation-frame/request-animation-frame";
 import "./style.css";
 import { Ghoul } from "./units/ghoul";
@@ -11,20 +12,26 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const canvas = new CanvasHandler();
 
-const gameWorld = new GameWorld({ rows: 100, columns: 100, size: 5 });
+const CELL_SIZE = 5;
+const ROWS = 100;
+const COLUMNS = ROWS
+
+const path = new Path(canvas, CELL_SIZE, [{ x: 5, y: 0 }, { x: 5, y: ROWS }], 1)
+
+const gameWorld = new GameWorld({ rows: ROWS, columns: COLUMNS, size: CELL_SIZE, }, path);
 
 const units: Unit[] = [new Ghoul(canvas, gameWorld)];
 
-setTimeout(() => {
-  units.push(new Ghoul(canvas, gameWorld));
-}, 300);
+// setTimeout(() => {
+//   units.push(new Ghoul(canvas, gameWorld));
+// }, 500);
 
-setTimeout(() => {
-  units.push(new Ghoul(canvas, gameWorld));
-}, 600);
+// setTimeout(() => {
+//   units.push(new Ghoul(canvas, gameWorld));
+// }, 1000);
 
-setTimeout(() => {
-  units.push(new Ghoul(canvas, gameWorld));
-}, 900);
+// setTimeout(() => {
+//   units.push(new Ghoul(canvas, gameWorld));
+// }, 1500);
 
 new RequestAnimationFrameHandler(() => units);

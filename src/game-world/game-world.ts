@@ -1,6 +1,9 @@
 import type { Unit } from "../units/unit";
+import { Path } from "./path";
 
 type Cell = string[] | null;
+
+type Entity = Unit | Path;
 
 /** Handles the location of units within the game world, should not communicate with the canvas */
 export class GameWorld {
@@ -13,9 +16,9 @@ export class GameWorld {
 
     public readonly columns: number;
 
-    public unitIdToUnit: Record<string, Unit> = {};
+    public entityIdToEntity: Record<string, Entity> = {};
 
-    constructor(options: { rows: number, columns: number, size: number }) {
+    constructor(options: { rows: number, columns: number, size: number }, path: Path) {
         this.cellSize = options.size;
         this.rows = options.rows;
         this.columns = options.columns;
@@ -26,10 +29,16 @@ export class GameWorld {
                 this.cells[x][y] = null;
             }
         }
+
+        path.setUpPath().forEach((pathPosition) => {
+            this.cells[pathPosition.x][pathPosition.y] = [path.id];
+            path.draw(pathPosition);
+        });
+        this.entityIdToEntity[path.id] = path;
     }
 
     public addUnitToGameWorld(unit: Unit) {
-        this.unitIdToUnit[unit.id] = unit;
+        this.entityIdToEntity[unit.id] = unit;
         this.moveUnitToUpdatedPosition(unit);
     }
 
@@ -71,15 +80,34 @@ export class GameWorld {
             const units = this.cells[x][y];
             units?.forEach((unitId) => {
                 if (!skipUnitsRedrawing.includes(unitId)) {
-                    const unit = this.unitIdToUnit[unitId];
-                    unit.draw();
-                    skipUnitsRedrawing.push(unit.id);
+                    const unit = this.entityIdToEntity[unitId];
+                    if (unit instanceof Path) {
+                        console.log("redraw path", x, y);
+                        unit.draw({ x, y });
+                    } else {
+                        unit.draw();
+                        skipUnitsRedrawing.push(unit.id);
+                    }
+
                 }
             })
         })
     }
 
-    public getCanvasPosition(position: { x: number, y: number }) {
-        return { x: position.x * this.cellSize, y: position.y * this.cellSize };
+    public getCanvasPositionForUnit(unit: Unit) {
+        return this.getPositionForUnit(unit, unit.position);
+    }
+
+    public getPreviousPositionForUnit(unit: Unit) {
+        return this.getPositionForUnit(unit, unit.previousPosition);
+    }
+
+    private getPositionForUnit(unit: Unit, position: { x: number, y: number }) {
+        const size = unit.getUnitSize();
+        const x = position.x * this.cellSize;
+        const y = position.y * this.cellSize;
+        const endX = x + (size.x * this.cellSize) + this.cellSize
+        const endY = y + (size.y * this.cellSize) + this.cellSize
+        return { start: { x, y }, end: { x: endX, y: endY } };
     }
 }

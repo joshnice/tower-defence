@@ -27,13 +27,12 @@ export abstract class Unit {
         this.id = crypto.randomUUID();
         this.setUnitStats();
         this.gameWorld.addUnitToGameWorld(this);
-        this.redraw();
+        this.draw();
     }
 
     /** Unit stats */
 
     protected abstract setUnitStats(): void;
-
 
     /** Called every request animation cycle */
     public update(updateTime: number) {
@@ -56,12 +55,26 @@ export abstract class Unit {
     /** Erases the unit on the canvas */
     protected erase() {
         // Clear the unit from the canvas
-        const sizeX = this.unitStats.size.x * this.gameWorld.cellSize;
-        const sizeY = this.unitStats.size.y * this.gameWorld.cellSize;
-        const previousCanvasPosition = this.gameWorld.getCanvasPosition(this.previousPosition);
-        this.canvasHandler.clearCanvas(previousCanvasPosition, { x: sizeX, y: sizeY });
+        const previousCanvasPosition = this.gameWorld.getPreviousPositionForUnit(this);
+        this.canvasHandler.clearCanvas(
+            { x: previousCanvasPosition.start.x, y: previousCanvasPosition.start.y },
+            {
+                x: previousCanvasPosition.end.x - previousCanvasPosition.start.x,
+                y: previousCanvasPosition.end.y - previousCanvasPosition.start.y
+            }
+        );
+
+        const redrawWorldPositions: { x: number, y: number }[] = [];
+        for (let xRedraw = this.previousPosition.x; xRedraw < this.previousPosition.x + this.unitStats.size.x; xRedraw++) {
+            for (let yRedraw = this.previousPosition.y; yRedraw < this.previousPosition.y + this.unitStats.size.y; yRedraw++) {
+                redrawWorldPositions.push({ x: xRedraw, y: yRedraw });
+            }
+        }
+
+        console.log("redrawWorldPositions", redrawWorldPositions);
+
         // Redraw the other units where the canvas has been cleared
-        this.gameWorld.redrawCoordinates(this.getPositionInGameWorld(), [this.id]);
+        this.gameWorld.redrawCoordinates(redrawWorldPositions);
     };
 
     /** Moves the position of the unit in the game world */
@@ -92,4 +105,8 @@ export abstract class Unit {
     public getPrevioussPositionInGameWorld() {
         return this.getGameWorldPosition(this.previousPosition);
     };
+
+    public getUnitSize() {
+        return this.unitStats.size;
+    }
 }

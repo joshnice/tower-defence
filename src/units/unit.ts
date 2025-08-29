@@ -71,8 +71,6 @@ export abstract class Unit {
             }
         }
 
-        console.log("redrawWorldPositions", redrawWorldPositions);
-
         // Redraw the other units where the canvas has been cleared
         this.gameWorld.redrawCoordinates(redrawWorldPositions);
     };

@@ -16,11 +16,11 @@ const CELL_SIZE = 5;
 const ROWS = 100;
 const COLUMNS = ROWS
 
-const path = new Path(canvas, CELL_SIZE, [{ x: 5, y: 0 }, { x: 5, y: ROWS }], 1)
+const path = new Path(canvas, CELL_SIZE, [{ x: 25, y: 0 }, { x: 25, y: 25 }, { x: 75, y: 25 }, { x: 75, y: ROWS }], 4)
 
 const gameWorld = new GameWorld({ rows: ROWS, columns: COLUMNS, size: CELL_SIZE, }, path);
 
-const units: Unit[] = [new Ghoul(canvas, gameWorld)];
+const units: Unit[] = [];
 
 // setTimeout(() => {
 //   units.push(new Ghoul(canvas, gameWorld));

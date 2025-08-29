@@ -82,7 +82,6 @@ export class GameWorld {
                 if (!skipUnitsRedrawing.includes(unitId)) {
                     const unit = this.entityIdToEntity[unitId];
                     if (unit instanceof Path) {
-                        console.log("redraw path", x, y);
                         unit.draw({ x, y });
                     } else {
                         unit.draw();

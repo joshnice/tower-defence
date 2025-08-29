@@ -33,24 +33,28 @@ export class Path {
 
             const nextCheckPoint = this.pathCheckPoints[index + 1];
 
-            // TODO: Handle negative values
             const xDiff = Math.abs(pathCheckPoint.x - nextCheckPoint.x);
             const yDiff = Math.abs(pathCheckPoint.y - nextCheckPoint.y);
 
-            let lastXValue = pathCheckPoint.x;
-
-            for (let x = 0; xDiff > x; x++) {
-                gameWorldPathPoints.push({ x, y: pathCheckPoint.y });
-                lastXValue = x;
+            if (xDiff !== 0 && yDiff !== 0) {
+                throw new Error("Don't support x and y changes per path checkpoint");
             }
 
-            for (let y = 0; yDiff > y; y++) {
-                gameWorldPathPoints.push({ x: lastXValue, y });
-                // for (let x = this.pathWidth * -0.5; this.pathWidth / 2 > x; x++) {
-                //     gameWorldPathPoints.push({ x: lastXValue + x, y });
-                // }
+            if (xDiff > 0) {
+                for (let x = pathCheckPoint.x; nextCheckPoint.x > x; x++) {
+                    for (let y = pathCheckPoint.y - (this.pathWidth * 0.5); pathCheckPoint.y + this.pathWidth > y; y++) {
+                        gameWorldPathPoints.push({ x, y });
+                    }
+                }
             }
 
+            if (yDiff > 0) {
+                for (let y = pathCheckPoint.y; nextCheckPoint.y > y; y++) {
+                    for (let x = pathCheckPoint.x - (this.pathWidth * 0.5); pathCheckPoint.x + this.pathWidth > x; x++) {
+                        gameWorldPathPoints.push({ x, y });
+                    }
+                }
+            }
         });
 
         return gameWorldPathPoints;
